@@ -1,5 +1,6 @@
 #Import Regex
 import re
+import collections
 
 #Settings
 min_phrase = 4
@@ -18,6 +19,22 @@ with open ("input.txt") as document:
 #Build dictionary of phrases
 phrases = {}
 for sentence in sentences:
-    words = re.split('\W+', sentence)
+    words = re.findall(r"[\w']+", sentence)
 
-    print(words) #Debug
+    #Build phrases starting from each word
+    for index,word in enumerate(words):
+
+        #Start with smallest phrase length and increase in size until end of sentence
+        phrase_length = min_phrase;
+        while (phrase_length <= max_phrase and  index + phrase_length <= len(words)):
+
+            #Phrases are all words between current index and phrase length
+            phrase = ' '.join( words[index : (index + phrase_length)] )
+
+            #Add phrase to dictionary or increment dulplicate count if it already exists
+            phrases[phrase] = phrases.get(phrase, 0) + 1
+            phrase_length += 1
+
+
+print(phrases)
+    #print(words) #Debug
